@@ -10,7 +10,7 @@ public class OopReviewApplication {
 
         SpringApplication.run(OopReviewApplication.class, args);
 
-        //helloooo
+
     }
 
 }
