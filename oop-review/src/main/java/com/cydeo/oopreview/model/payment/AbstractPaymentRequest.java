@@ -20,7 +20,9 @@ public class AbstractPaymentRequest {
     }
 
     public Localization getLocale() {
-        return Arrays.stream(Localization.values()).findAny().orElse(DEFAULT_LOCALE);
+        return Arrays.stream(Localization.values()).
+                filter(localization ->
+                        localization.name().equals(this.locale.name())).findAny().orElse(DEFAULT_LOCALE);
     }
 
     public void setLocale(Localization locale) {
