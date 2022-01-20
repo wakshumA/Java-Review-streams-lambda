@@ -10,19 +10,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TenantPosSelectionServiceImpl implements PosSelectionService {
-
-    private final PosInitializationService posInitializationService;
-
-    public TenantPosSelectionServiceImpl(PosInitializationService posInitializationService) {
-        this.posInitializationService = posInitializationService;
-    }
-
     @Override
     // We filter the POS that can serve the service provider of the card.
     // In this way, we can choose the pos with the lowest cost among all the options.
     public Pos decidePaymentPos(AuthRequest authRequest) {
-
-        posInitializationService.initializePosList();
 
         List<Pos> avaliablePosList = StaticConstants.POS_LIST.stream()
         .filter(pos -> pos.getSupportedServiceProviderList().contains(authRequest.getServiceProvider())).collect(Collectors.toList());
@@ -30,7 +21,8 @@ public class TenantPosSelectionServiceImpl implements PosSelectionService {
         return decideSelectedPos(avaliablePosList, authRequest);
     }
 
-    //We aim to determine the lowest cost pos from the list of pos where payment can be accepted and send the payment to this pos.
+    //We aim to determine the lowest cost pos from the list of
+    // pos where payment can be accepted and send the payment to this pos.
     public Pos decideSelectedPos(List<Pos> posList, AuthRequest authRequest){
         Pos selectedPos = posList.get(0);
         double firstIndexCommission = selectedPos.getInstallmentCommissionMap().get(authRequest.getInstallment()) ;

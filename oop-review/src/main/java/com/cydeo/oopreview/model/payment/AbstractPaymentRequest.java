@@ -7,16 +7,16 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 
 public class AbstractPaymentRequest {
-    private static final Localization DEFAULT_LOCALE = Localization.ENG;
+    public static final Localization DEFAULT_LOCALE = Localization.ENG;
 
     protected BigDecimal amount;
     protected Localization locale;
-    protected String conversationId;
+    protected String orderId;
 
-    public AbstractPaymentRequest(BigDecimal amount, Localization locale, String conversationId) {
+    public AbstractPaymentRequest(BigDecimal amount, Localization locale, String orderId) {
         this.amount = amount;
         this.locale = locale;
-        this.conversationId = conversationId;
+        this.orderId = orderId;
     }
 
     public Localization getLocale() {
@@ -27,13 +27,6 @@ public class AbstractPaymentRequest {
         this.locale = locale;
     }
 
-    public String getConversationId() {
-        return conversationId;
-    }
-
-    public void setConversationId(String conversationId) {
-        this.conversationId = conversationId;
-    }
 
     public BigDecimal getAmount() {
         return amount;

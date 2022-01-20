@@ -1,7 +1,7 @@
 package com.cydeo.oopreview.service.impl.payment;
 
 import com.cydeo.oopreview.exception.InvalidPaymentStrategyException;
-import com.cydeo.oopreview.model.payment.AbstractPaymentResponse;
+import com.cydeo.oopreview.model.payment.PaymentResponse;
 import com.cydeo.oopreview.model.payment.AuthRequest;
 import com.cydeo.oopreview.model.payment.Payment;
 import com.cydeo.oopreview.model.pos.Pos;
@@ -36,14 +36,13 @@ public class TenantPaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public AbstractPaymentResponse auth(AuthRequest authRequest) throws InvalidPaymentStrategyException {
-        AbstractPaymentResponse abstractPaymentResponse = new AbstractPaymentResponse();
+    public PaymentResponse auth(AuthRequest authRequest){
+        PaymentResponse paymentResponse = new PaymentResponse();
 
-        PosSelectionService posSelectionService = decidePaymentPosThatWillBeProcessed(authRequest);
+        PosSelectionService posSelectionService = new TenantPosSelectionServiceImpl();
 
         Pos pos = posSelectionService.decidePaymentPos(authRequest);
 
-        //add comment
         String recipient = "Recipient";
 
         AbstractPosClient abstractPosClient;
@@ -59,23 +58,23 @@ public class TenantPaymentServiceImpl implements PaymentService {
 
         PosClientResponse posClientResponse = abstractPosClient.auth(posClientRequest);
 
-        abstractPaymentResponse = doErrorCodeMapping(posClientResponse, resourceBundle);
+        paymentResponse = doErrorCodeMapping(posClientResponse, resourceBundle);
 
-        abstractPaymentResponse.setPaymentCostAmount(calculateCommissionForTenantMerchant(
+        paymentResponse.setPaymentCostAmount(calculateCommissionForTenantMerchant(
                 authRequest.getAmount(), pos.getInstallmentCommissionMap().get(authRequest.getInstallment())));
 
-        if (abstractPaymentResponse.getResult() == 1){
+        if (paymentResponse.getResult() == 1){
             initPaymentRecord(authRequest, orderId);
         }
-        return abstractPaymentResponse;
+        return paymentResponse;
     }
 
 
     @Override
-    public AbstractPaymentResponse auth3D(AuthRequest auth3DRequest) {
-        AbstractPaymentResponse abstractPaymentResponse = new AbstractPaymentResponse();
+    public PaymentResponse auth3D(AuthRequest auth3DRequest) {
+        PaymentResponse paymentResponse = new PaymentResponse();
 
-        PosSelectionService posSelectionService = decidePaymentPosThatWillBeProcessed(auth3DRequest);
+        PosSelectionService posSelectionService = new TenantPosSelectionServiceImpl();
 
         Pos pos = posSelectionService.decidePaymentPos(auth3DRequest);
         String recipient = "Recipient";
@@ -94,16 +93,16 @@ public class TenantPaymentServiceImpl implements PaymentService {
 
         PosClientResponse posClientResponse = abstractPosClient.auth3D(posClientRequest);
 
-        abstractPaymentResponse = doErrorCodeMapping(posClientResponse, resourceBundle);
+        paymentResponse = doErrorCodeMapping(posClientResponse, resourceBundle);
 
-        if (abstractPaymentResponse.getResult() == 1){
-            abstractPaymentResponse.setPaymentCostAmount(calculateCommissionForTenantMerchant(
+        if (paymentResponse.getResult() == 1){
+            paymentResponse.setPaymentCostAmount(calculateCommissionForTenantMerchant(
                     auth3DRequest.getAmount(), pos.getInstallmentCommissionMap().get(auth3DRequest.getInstallment())));
 
             initPaymentRecord(auth3DRequest, orderId);
         }
 
-        return abstractPaymentResponse;
+        return paymentResponse;
     }
 
     public BigDecimal calculateCommissionForTenantMerchant(BigDecimal paymentAmount, Double commissionRate) {
@@ -112,19 +111,19 @@ public class TenantPaymentServiceImpl implements PaymentService {
                 .round(MathContext.DECIMAL32);
     }
 
-    AbstractPaymentResponse doErrorCodeMapping(PosClientResponse posClientResponse, ResourceBundle resourceBundle){
+    PaymentResponse doErrorCodeMapping(PosClientResponse posClientResponse, ResourceBundle resourceBundle){
 
-        AbstractPaymentResponse abstractPaymentResponse = new AbstractPaymentResponse();
-        abstractPaymentResponse.setResult(posClientResponse.getResult());
+        PaymentResponse paymentResponse = new PaymentResponse();
+        paymentResponse.setResult(posClientResponse.getResult());
 
         if (posClientResponse.getResult() != 1){
-            abstractPaymentResponse.
+            paymentResponse.
                     setResultMessage(resourceBundle.getString(
                             resourceBundle.getString("error.code." + posClientResponse.getErrorCde())));
 
-            abstractPaymentResponse.setErrorCde(posClientResponse.getErrorCde());
+            paymentResponse.setErrorCde(posClientResponse.getErrorCde());
         }
-        return abstractPaymentResponse;
+        return paymentResponse;
     }
 
     public void initPaymentRecord(AuthRequest authRequest, UUID orderId){
@@ -142,14 +141,6 @@ public class TenantPaymentServiceImpl implements PaymentService {
                 return new BankCPosClient();
             default:
                 return null;
-        }
-    }
-
-    private PosSelectionService decidePaymentPosThatWillBeProcessed(AuthRequest authRequest) {
-        if (authRequest.isHybridPayment()) {
-            return new HybridPosSelectionServiceImpl(new HybridPosInitializationServiceImpl());
-        } else {
-            return new TenantPosSelectionServiceImpl(new TenantPosInitializationServiceImpl());
         }
     }
 }

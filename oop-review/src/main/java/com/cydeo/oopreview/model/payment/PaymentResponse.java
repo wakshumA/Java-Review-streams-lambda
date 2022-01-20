@@ -2,18 +2,18 @@ package com.cydeo.oopreview.model.payment;
 
 import java.math.BigDecimal;
 
-public class AbstractPaymentResponse {
+public class PaymentResponse {
 
     private int result;
     private String errorCde;
     private String resultMessage;
     private BigDecimal paymentCostAmount;
 
-    public AbstractPaymentResponse(){
+    public PaymentResponse(){
 
     }
 
-    public AbstractPaymentResponse(int result, String errorCde, String resultMessage, BigDecimal paymentCostAmount) {
+    public PaymentResponse(int result, String errorCde, String resultMessage, BigDecimal paymentCostAmount) {
         this.result = result;
         this.errorCde = errorCde;
         this.resultMessage = resultMessage;

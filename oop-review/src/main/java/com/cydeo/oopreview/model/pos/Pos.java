@@ -8,13 +8,11 @@ import java.util.Map;
 
 public class Pos {
     private String name;
-    private Long partnerId;
     private List<ServiceProvider> supportedServiceProviderList;
     private Map<Integer, Double> installmentCommissionMap;
 
-    public Pos(String name, Long partnerId, Map<Integer, Double> installmentCommissionMap, List<ServiceProvider> supportedServiceProviderList) {
+    public Pos(String name, Map<Integer, Double> installmentCommissionMap, List<ServiceProvider> supportedServiceProviderList) {
         this.name = name;
-        this.partnerId = partnerId;
         this.installmentCommissionMap = installmentCommissionMap;
         this.supportedServiceProviderList = supportedServiceProviderList;
     }
@@ -25,14 +23,6 @@ public class Pos {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Long getPartnerId() {
-        return partnerId;
-    }
-
-    public void setPartnerId(Long partnerId) {
-        this.partnerId = partnerId;
     }
 
     public Map<Integer, Double> getInstallmentCommissionMap() {

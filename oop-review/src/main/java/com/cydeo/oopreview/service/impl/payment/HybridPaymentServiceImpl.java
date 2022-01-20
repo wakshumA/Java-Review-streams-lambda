@@ -2,7 +2,7 @@ package com.cydeo.oopreview.service.impl.payment;
 
 
 import com.cydeo.oopreview.enums.ServiceProvider;
-import com.cydeo.oopreview.model.payment.AbstractPaymentResponse;
+import com.cydeo.oopreview.model.payment.PaymentResponse;
 import com.cydeo.oopreview.model.payment.AuthRequest;
 import com.cydeo.oopreview.model.payment.Payment;
 import com.cydeo.oopreview.model.pos.Pos;
@@ -29,10 +29,10 @@ import static com.cydeo.oopreview.constant.StaticConstants.HYBRID_MERCHANT_PAYME
 public class HybridPaymentServiceImpl implements PaymentService {
 
     @Override
-    public AbstractPaymentResponse auth(AuthRequest authRequest) {
-        AbstractPaymentResponse abstractPaymentResponse = new AbstractPaymentResponse();
+    public PaymentResponse auth(AuthRequest authRequest) {
+        PaymentResponse paymentResponse = new PaymentResponse();
 
-        PosSelectionService posSelectionService = decidePaymentPosThatWillBeProcessed(authRequest);
+        PosSelectionService posSelectionService = new HybridPosSelectionServiceImpl();
 
         Pos pos = posSelectionService.decidePaymentPos(authRequest);
         String recipient = "Recipient";
@@ -50,25 +50,25 @@ public class HybridPaymentServiceImpl implements PaymentService {
 
         PosClientResponse posClientResponse = abstractPosClient.auth(posClientRequest);
 
-        abstractPaymentResponse.setResult(posClientResponse.getResult());
-        abstractPaymentResponse.setErrorCde(posClientResponse.getErrorCde());
+        paymentResponse.setResult(posClientResponse.getResult());
+        paymentResponse.setErrorCde(posClientResponse.getErrorCde());
 
-        abstractPaymentResponse.setPaymentCostAmount(
+        paymentResponse.setPaymentCostAmount(
                 calculateCommissionAmountForHybridMerchant(authRequest.getServiceProvider()));
 
-        if (abstractPaymentResponse.getResult() == 1){
+        if (paymentResponse.getResult() == 1){
             initHybridMerchantPayment(authRequest, orderId);
         }
 
-        return abstractPaymentResponse;
+        return paymentResponse;
     }
 
 
     @Override
-    public AbstractPaymentResponse auth3D(AuthRequest auth3DRequest){
-        AbstractPaymentResponse abstractPaymentResponse = new AbstractPaymentResponse();
+    public PaymentResponse auth3D(AuthRequest auth3DRequest){
+        PaymentResponse paymentResponse = new PaymentResponse();
 
-        PosSelectionService posSelectionService = decidePaymentPosThatWillBeProcessed(auth3DRequest);
+        PosSelectionService posSelectionService = new HybridPosSelectionServiceImpl();
 
         Pos pos = posSelectionService.decidePaymentPos(auth3DRequest);
         String recipient = "Recipient";
@@ -86,17 +86,17 @@ public class HybridPaymentServiceImpl implements PaymentService {
 
         PosClientResponse posClientResponse = abstractPosClient.auth3D(posClientRequest);
 
-        abstractPaymentResponse.setResult(posClientResponse.getResult());
-        abstractPaymentResponse.setErrorCde(posClientResponse.getErrorCde());
+        paymentResponse.setResult(posClientResponse.getResult());
+        paymentResponse.setErrorCde(posClientResponse.getErrorCde());
 
-        abstractPaymentResponse.setPaymentCostAmount(
+        paymentResponse.setPaymentCostAmount(
                 calculateCommissionAmountForHybridMerchant(auth3DRequest.getServiceProvider()));
 
-        if (abstractPaymentResponse.getResult() == 1){
+        if (paymentResponse.getResult() == 1){
             initHybridMerchantPayment(auth3DRequest, orderId);
         }
 
-        return abstractPaymentResponse;
+        return paymentResponse;
     }
 
     // cost calculation showing how much will be charged for successful payments from stores
@@ -130,15 +130,6 @@ public class HybridPaymentServiceImpl implements PaymentService {
                 return new BankCPosClient();
             default:
                 return null;
-        }
-    }
-
-    //It is the part where the pos selection algorithms to be run are determined according to the hybrid or tenant payments.
-    private PosSelectionService decidePaymentPosThatWillBeProcessed(AuthRequest authRequest) {
-        if (authRequest.isHybridPayment()) {
-            return new HybridPosSelectionServiceImpl(new HybridPosInitializationServiceImpl());
-        } else {
-            return new TenantPosSelectionServiceImpl(new TenantPosInitializationServiceImpl());
         }
     }
 }

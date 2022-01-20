@@ -1,8 +1,7 @@
 package com.cydeo.oopreview.controller;
 
 import com.cydeo.oopreview.enums.CardType;
-import com.cydeo.oopreview.exception.InvalidPaymentStrategyException;
-import com.cydeo.oopreview.model.payment.AbstractPaymentResponse;
+import com.cydeo.oopreview.model.payment.PaymentResponse;
 import com.cydeo.oopreview.model.payment.AuthRequest;
 import com.cydeo.oopreview.service.PaymentService;
 import com.cydeo.oopreview.service.impl.payment.HybridPaymentServiceImpl;
@@ -27,25 +26,19 @@ public class PaymentController {
 
     // accept payment requests from any clients
     @PostMapping
-    public AbstractPaymentResponse makePayment(@RequestBody AuthRequest authRequest) {
+    public PaymentResponse makePayment(@RequestBody AuthRequest authRequest) {
         // payment response success result 1 failure result 0
         // If the payment is unsuccessful, the error message and error code field will also be filled.
-        AbstractPaymentResponse abstractPaymentResponse = new AbstractPaymentResponse();
-        try {
-            PaymentService paymentService = decidePaymentPosThatWillBeProcessed(authRequest);
-            if (forceThreeds(authRequest)) {
-                abstractPaymentResponse = paymentService.auth3D(authRequest);
-            } else {
-                abstractPaymentResponse = paymentService.auth(authRequest);
-            }
-        } catch (InvalidPaymentStrategyException e) {
-            e.printStackTrace();
+        PaymentService paymentService = decidePaymentTypeThatWillBeProcessed(authRequest);
+        if (force3Ds(authRequest)) {
+            return paymentService.auth3D(authRequest);
+        } else {
+            return paymentService.auth(authRequest);
         }
-        return abstractPaymentResponse;
     }
 
     //Determines whether payments are forwarded as 3d secure or non secure
-    private boolean forceThreeds(AuthRequest authRequest) {
+    private boolean force3Ds(AuthRequest authRequest) {
         if (CardType.DEBIT.equals(authRequest.getCardType())) {
             return true;
         } else {
@@ -54,7 +47,7 @@ public class PaymentController {
     }
 
     //determines the method by which payments will be advanced (hybrid or tenant)
-    private PaymentService decidePaymentPosThatWillBeProcessed(AuthRequest authRequest) {
+    private PaymentService decidePaymentTypeThatWillBeProcessed(AuthRequest authRequest) {
         if (authRequest.isHybridPayment()) {
             return new HybridPaymentServiceImpl();
         } else {

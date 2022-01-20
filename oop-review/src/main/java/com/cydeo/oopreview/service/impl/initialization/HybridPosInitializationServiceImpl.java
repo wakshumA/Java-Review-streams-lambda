@@ -32,7 +32,6 @@ public class HybridPosInitializationServiceImpl implements PosInitializationServ
             String posName = "BANK" + bankCode;
 
             Pos pos = new Pos(posName,
-                    EXTERNAL_PARTNER_ID,
                     null,
                     decideSupportedServiceProviderList(posName));
 

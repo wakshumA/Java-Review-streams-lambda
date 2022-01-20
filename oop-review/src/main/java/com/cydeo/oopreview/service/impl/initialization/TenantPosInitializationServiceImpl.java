@@ -27,7 +27,6 @@ public class TenantPosInitializationServiceImpl implements PosInitializationServ
         for (Character bankCode : BANK_CODE){
             String posName = "BANK" + bankCode;
             Pos pos = new Pos(posName,
-                    CYDEO_PARTNER_ID,
                     initializePosCommissionRateMap(initialValue),
                     decideSupportedServiceProviderList(posName));
             initialValue += incrementValueForPos;
