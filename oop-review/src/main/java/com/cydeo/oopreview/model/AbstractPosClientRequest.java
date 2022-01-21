@@ -6,14 +6,10 @@ public class AbstractPosClientRequest{
     private final BigDecimal AMOUNT_CONVERSATION_VARIABLE = new BigDecimal(100);
 
     protected BigDecimal requestedAmount;
-    protected String posClientClassName;
-    protected String recipientName;
     protected String orderId;
 
-    public AbstractPosClientRequest(BigDecimal requestedAmount, String posClientClassName, String recipientName) {
+    public AbstractPosClientRequest(BigDecimal requestedAmount) {
         this.requestedAmount = requestedAmount;
-        this.posClientClassName = posClientClassName;
-        this.recipientName = recipientName;
     }
 
     public BigDecimal getRequestedAmount() {
@@ -22,22 +18,6 @@ public class AbstractPosClientRequest{
 
     public void setRequestedAmount(BigDecimal requestedAmount) {
         this.requestedAmount = requestedAmount.multiply(AMOUNT_CONVERSATION_VARIABLE);
-    }
-
-    public String getPosClientClassName() {
-        return posClientClassName + "PosClient";
-    }
-
-    public void setPosClientClassName(String posClientClassName) {
-        this.posClientClassName = posClientClassName;
-    }
-
-    public String getRecipientName() {
-        return recipientName;
-    }
-
-    public void setRecipientName(String recipientName) {
-        this.recipientName = recipientName;
     }
 
     public String getOrderId() {

@@ -30,25 +30,21 @@ public class HybridPaymentServiceImpl implements PaymentService {
 
     @Override
     public PaymentResponse auth(AuthRequest authRequest) {
-        PaymentResponse paymentResponse = new PaymentResponse();
 
         PosSelectionService posSelectionService = new HybridPosSelectionServiceImpl();
 
         Pos pos = posSelectionService.decidePaymentPos(authRequest);
-        String recipient = "Recipient";
 
-        AbstractPosClient abstractPosClient;
+        AbstractPosClient abstractPosClient = decidePosClient(pos.getName());
 
         PosClientRequest posClientRequest = new PosClientRequest(authRequest.getAmount(),
-                pos.getName(),
-                recipient);
-
-        abstractPosClient = decidePosClient(pos.getName());
+                pos.getName());
 
         UUID orderId = abstractPosClient.generateOrderId();
         posClientRequest.setOrderId(orderId.toString());
 
         PosClientResponse posClientResponse = abstractPosClient.auth(posClientRequest);
+        PaymentResponse paymentResponse = new PaymentResponse();
 
         paymentResponse.setResult(posClientResponse.getResult());
         paymentResponse.setErrorCde(posClientResponse.getErrorCde());
@@ -66,26 +62,22 @@ public class HybridPaymentServiceImpl implements PaymentService {
 
     @Override
     public PaymentResponse auth3D(AuthRequest auth3DRequest){
-        PaymentResponse paymentResponse = new PaymentResponse();
 
         PosSelectionService posSelectionService = new HybridPosSelectionServiceImpl();
 
         Pos pos = posSelectionService.decidePaymentPos(auth3DRequest);
-        String recipient = "Recipient";
 
-        AbstractPosClient abstractPosClient;
+        AbstractPosClient abstractPosClient = decidePosClient(pos.getName());
 
         PosClientRequest posClientRequest = new PosClientRequest(auth3DRequest.getAmount(),
-                pos.getName(),
-                recipient);
-
-        abstractPosClient = decidePosClient(pos.getName());
+                pos.getName());
 
         UUID orderId = abstractPosClient.generateOrderId();
         posClientRequest.setOrderId(orderId.toString());
 
         PosClientResponse posClientResponse = abstractPosClient.auth3D(posClientRequest);
 
+        PaymentResponse paymentResponse = new PaymentResponse();
         paymentResponse.setResult(posClientResponse.getResult());
         paymentResponse.setErrorCde(posClientResponse.getErrorCde());
 

@@ -20,6 +20,7 @@ import com.cydeo.oopreview.service.impl.selection.TenantPosSelectionServiceImpl;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.UUID;
@@ -37,28 +38,22 @@ public class TenantPaymentServiceImpl implements PaymentService {
 
     @Override
     public PaymentResponse auth(AuthRequest authRequest){
-        PaymentResponse paymentResponse = new PaymentResponse();
-
         PosSelectionService posSelectionService = new TenantPosSelectionServiceImpl();
 
         Pos pos = posSelectionService.decidePaymentPos(authRequest);
 
-        String recipient = "Recipient";
-
-        AbstractPosClient abstractPosClient;
-
-        PosClientRequest posClientRequest = new  PosClientRequest(authRequest.getAmount(),
-                pos.getName(),
-                recipient);
-
-        abstractPosClient = decidePosClient(pos.getName());
+        AbstractPosClient abstractPosClient = decidePosClient(pos.getName());
 
         UUID orderId = abstractPosClient.generateOrderId();
+
+        PosClientRequest posClientRequest = new  PosClientRequest(authRequest.getAmount(),
+                pos.getName());
+
         posClientRequest.setOrderId(orderId.toString());
 
         PosClientResponse posClientResponse = abstractPosClient.auth(posClientRequest);
 
-        paymentResponse = doErrorCodeMapping(posClientResponse, resourceBundle);
+        PaymentResponse paymentResponse = doErrorCodeMapping(posClientResponse, resourceBundle);
 
         paymentResponse.setPaymentCostAmount(calculateCommissionForTenantMerchant(
                 authRequest.getAmount(), pos.getInstallmentCommissionMap().get(authRequest.getInstallment())));
@@ -72,20 +67,14 @@ public class TenantPaymentServiceImpl implements PaymentService {
 
     @Override
     public PaymentResponse auth3D(AuthRequest auth3DRequest) {
-        PaymentResponse paymentResponse = new PaymentResponse();
-
         PosSelectionService posSelectionService = new TenantPosSelectionServiceImpl();
 
         Pos pos = posSelectionService.decidePaymentPos(auth3DRequest);
-        String recipient = "Recipient";
 
-        AbstractPosClient abstractPosClient;
+        AbstractPosClient abstractPosClient = decidePosClient(pos.getName());
 
         PosClientRequest posClientRequest = new PosClientRequest(auth3DRequest.getAmount(),
-                pos.getName(),
-                recipient);
-
-        abstractPosClient = decidePosClient(pos.getName());
+                pos.getName());
 
         UUID orderId = abstractPosClient.generateOrderId();
 
@@ -93,7 +82,7 @@ public class TenantPaymentServiceImpl implements PaymentService {
 
         PosClientResponse posClientResponse = abstractPosClient.auth3D(posClientRequest);
 
-        paymentResponse = doErrorCodeMapping(posClientResponse, resourceBundle);
+        PaymentResponse paymentResponse = doErrorCodeMapping(posClientResponse, resourceBundle);
 
         if (paymentResponse.getResult() == 1){
             paymentResponse.setPaymentCostAmount(calculateCommissionForTenantMerchant(
@@ -127,7 +116,8 @@ public class TenantPaymentServiceImpl implements PaymentService {
     }
 
     public void initPaymentRecord(AuthRequest authRequest, UUID orderId){
-        Payment payment = new Payment(new Date(), authRequest.getAmount(), orderId, authRequest.getAmount());
+        Payment payment = new Payment(new Date(), authRequest.getAmount(),
+                orderId, authRequest.getAmount());
         CYDEO_PAYMENT_LIST.add(payment);
     }
 
