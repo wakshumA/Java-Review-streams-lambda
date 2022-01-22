@@ -46,8 +46,7 @@ public class TenantPaymentServiceImpl implements PaymentService {
 
         UUID orderId = abstractPosClient.generateOrderId();
 
-        PosClientRequest posClientRequest = new  PosClientRequest(authRequest.getAmount(),
-                pos.getName());
+        PosClientRequest posClientRequest = new  PosClientRequest(authRequest.getAmount());
 
         posClientRequest.setOrderId(orderId.toString());
 
@@ -73,8 +72,7 @@ public class TenantPaymentServiceImpl implements PaymentService {
 
         AbstractPosClient abstractPosClient = decidePosClient(pos.getName());
 
-        PosClientRequest posClientRequest = new PosClientRequest(auth3DRequest.getAmount(),
-                pos.getName());
+        PosClientRequest posClientRequest = new PosClientRequest(auth3DRequest.getAmount());
 
         UUID orderId = abstractPosClient.generateOrderId();
 

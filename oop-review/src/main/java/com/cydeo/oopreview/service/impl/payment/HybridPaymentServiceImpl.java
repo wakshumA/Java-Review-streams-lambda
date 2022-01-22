@@ -37,8 +37,7 @@ public class HybridPaymentServiceImpl implements PaymentService {
 
         AbstractPosClient abstractPosClient = decidePosClient(pos.getName());
 
-        PosClientRequest posClientRequest = new PosClientRequest(authRequest.getAmount(),
-                pos.getName());
+        PosClientRequest posClientRequest = new PosClientRequest(authRequest.getAmount());
 
         UUID orderId = abstractPosClient.generateOrderId();
         posClientRequest.setOrderId(orderId.toString());
@@ -69,8 +68,7 @@ public class HybridPaymentServiceImpl implements PaymentService {
 
         AbstractPosClient abstractPosClient = decidePosClient(pos.getName());
 
-        PosClientRequest posClientRequest = new PosClientRequest(auth3DRequest.getAmount(),
-                pos.getName());
+        PosClientRequest posClientRequest = new PosClientRequest(auth3DRequest.getAmount());
 
         UUID orderId = abstractPosClient.generateOrderId();
         posClientRequest.setOrderId(orderId.toString());
