@@ -8,10 +8,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="generics" />
         <module name="oop-review" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="8">
+      <module name="generics" target="8" />
       <module name="oop-review" target="11" />
     </bytecodeTargetLevel>
   </component>

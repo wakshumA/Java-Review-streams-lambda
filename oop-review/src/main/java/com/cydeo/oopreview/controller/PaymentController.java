@@ -15,6 +15,7 @@ import java.util.ResourceBundle;
 
 @RequestMapping("/payment")
 public class PaymentController {
+
     private final BigDecimal THREEDS_LIMIT = new BigDecimal(500);
 
     private final ResourceBundle resourceBundle;

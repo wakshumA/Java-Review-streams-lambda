@@ -8,6 +8,7 @@
       <list>
         <option value="$PROJECT_DIR$/java-oop-warmup/pom.xml" />
         <option value="$PROJECT_DIR$/oop-review/pom.xml" />
+        <option value="$PROJECT_DIR$/generics/pom.xml" />
       </list>
     </option>
   </component>

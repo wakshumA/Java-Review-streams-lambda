@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 
 public class AbstractPaymentRequest {
+
     public static final Localization DEFAULT_LOCALE = Localization.ENG;
 
     protected BigDecimal amount;

@@ -8,6 +8,7 @@ import java.util.UUID;
 public abstract class AbstractPosClient {
 
     public UUID generateOrderId(){
+
         return UUID.randomUUID();
     }
 
