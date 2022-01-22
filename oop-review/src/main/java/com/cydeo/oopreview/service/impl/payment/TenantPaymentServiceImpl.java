@@ -93,7 +93,7 @@ public class TenantPaymentServiceImpl implements PaymentService {
         return paymentResponse;
     }
 
-    public BigDecimal  bcalculateCommissionForTenantMerchant(BigDecimal paymentAmount, Double commissionRate) {
+    public BigDecimal  calculateCommissionForTenantMerchant(BigDecimal paymentAmount, Double commissionRate) {
         return paymentAmount.multiply(new BigDecimal(commissionRate))
                 .divide(new BigDecimal(100))
                 .round(MathContext.DECIMAL32);
