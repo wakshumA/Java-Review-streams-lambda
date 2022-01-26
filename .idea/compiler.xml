@@ -12,8 +12,8 @@
         <module name="oop-review" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="8">
-      <module name="generics" target="8" />
+    <bytecodeTargetLevel target="11">
+      <module name="generics" target="11" />
       <module name="oop-review" target="11" />
     </bytecodeTargetLevel>
   </component>
