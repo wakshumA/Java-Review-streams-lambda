@@ -15,7 +15,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel target="8">
       <module name="generics" target="8" />
-      <module name="lambda" target="8" />
+      <module name="lambda" target="11" />
       <module name="oop-review" target="11" />
     </bytecodeTargetLevel>
   </component>
