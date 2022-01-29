@@ -1,3 +1,4 @@
+
 public class Apple {
 
     private int weight;
