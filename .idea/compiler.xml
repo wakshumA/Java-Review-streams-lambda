@@ -8,15 +8,19 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="generics" />
-        <module name="oop-review" />
         <module name="lambda" />
+        <module name="oop-review" />
+        <module name="generics" />
+        <module name="streams" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="8">
+    <bytecodeTargetLevel target="1.4">
+      <module name="collections-review" target="14" />
       <module name="generics" target="8" />
+      <module name="java-review" target="14" />
       <module name="lambda" target="11" />
       <module name="oop-review" target="11" />
+      <module name="streams" target="14" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
