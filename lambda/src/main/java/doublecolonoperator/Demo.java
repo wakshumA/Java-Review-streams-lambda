@@ -37,6 +37,14 @@ public class Demo {
         display2.accept(50);
 
 
+        System.out.println(20);
+
+
+        BiFunction<MyClass,Integer,Double> v2 = MyClass::method;
+        BiFunction<String,String,String> v3 = String::concat;
+
+
+
 
 
 

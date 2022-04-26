@@ -7,7 +7,8 @@ public class Examples {
     public static void main(String[] args) {
 
         //************PREDICATE******************//
-
+        //Anonymous class
+//
 //        Predicate<Integer> lesserThan = new Predicate<Integer>() {
 //            @Override
 //            public boolean test(Integer integer) {
@@ -43,7 +44,20 @@ public class Examples {
 
 
         Predicate<Integer> pred = (p) -> p%2 == 0? true : false;
+        System.out.println(pred.test(10));
 
+
+        Function<String,Integer> fun2 = s ->  s.length();
+        Integer result3 = fun2.apply("wakshum");
+        System.out.println(result3);
+
+
+        BiFunction<Integer,Integer,Integer> biFunction = (a,b) -> a*b;
+
+        System.out.println(biFunction.apply(20,40));
+
+
+        
 
 
 

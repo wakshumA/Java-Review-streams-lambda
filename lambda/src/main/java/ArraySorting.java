@@ -3,6 +3,7 @@ public class ArraySorting {
     public static void main(String[] args) {
 
         ArraySorting as = new ArraySorting();
+
 //        as.sort();
 
         QuickSort qs = new QuickSort();
@@ -22,7 +23,8 @@ public class ArraySorting {
        as.sort(() -> System.out.println("Buble sorting"));
 
 
-
+//       MyLambda myLambda = () -> System.out.println("sorting the array");
+//       Sorting sorting = () -> System.out.println("sorting the array");
 
 
 
@@ -32,6 +34,14 @@ public class ArraySorting {
 
         sorting.sort();
     }
+
 }
+
+interface MyLambda{
+    void print();
+}
+
+
+
 
 

@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class AppleTest {
@@ -11,8 +12,6 @@ public class AppleTest {
         inventory.add(new Apple(100,Color.RED));
         inventory.add(new Apple(200,Color.GREEN));
         inventory.add(new Apple(50,Color.RED));
-
-
 
 //        List<Apple> heavyApple = filterApples(inventory,new AppleHeavyPredicate());
 //        System.out.println(heavyApple);
